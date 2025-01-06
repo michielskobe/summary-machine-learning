@@ -1,1 +1,8 @@
-\section{Logistische regressie}
+\section{Logistische regressie }
+
+\subsection{Classificatie}
+Een binaire classificatie zal 2 mogelijke output-waarden hebben die we kunnen voorstellen als een negatieve klasse ($y = 0$) en een positieve klasse ($y = 1$).  We zouden kunnen proberen om een regressie model te fitten op deze data en onze output te voorspellen afhankelijk of de waarde voor $f_{w,b}(x)$ groter of kleiner is dan een drempelwaarde (bijvoorbeeld 0,5). We zullen echter zien dat dit model heel gevoelig is voor uitschieters en dat $f_{w,b}(x)$ groter dan 1 of kleiner dan 0 kan zijn. Dit is ongewenst.\\
+\newline
+We zouden willen dat $f_{w,b}(x)$ tussen 0 en 1 ligt. Om dit te bereiken kunnen we logistische regressie gebruiken. De naam is een beetje verwarrend maar dit is een geval van classificatie en geen regressie. In de praktijk wordt dit gerealiseerd met een neuraal netwerk met één node. 
+
+\subsection{Logistische regressie }
