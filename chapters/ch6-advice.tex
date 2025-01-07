@@ -67,11 +67,128 @@ In het geval van \textit{high bias}, zullen we een grote fout hebben op onze tra
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.65\linewidth]{images/20-learning-curves.png}
+	\includegraphics[width=0.5\linewidth]{images/20-learning-curves.png}
 	\caption{Leercurves voor variantie en \textit{bias}}
 	\label{fig:learning-curves}
 \end{figure}
+\newpage
 
 \subsection{\textit{Bias} en variantie tegengaan}
 
-We kunnen dus concluderen dat wanneer we te maken hebben met \textit{high bias}, we dit kunnen oplossen door extra \textit{features} toe te voegen, extra polynomiale \textit{features} toe te voegen of de regularisatieparameter $\lambda$ te verkleinen. \textit{High variance} kan tegengegaan worden door meer trainingsdata toe te voegen, minder \textit{features} te gebruiken of de regularisatieparameter $\lambda$ te vergroten.
+We kunnen dus concluderen dat wanneer we te maken hebben met \textit{high bias}, we dit kunnen oplossen door extra \textit{features} toe te voegen, extra polynomiale \textit{features} toe te voegen of de regularisatieparameter $\lambda$ te verkleinen. \textit{High variance} kan tegengegaan worden door meer trainingsdata toe te voegen, minder \textit{features} te gebruiken of de regularisatieparameter $\lambda$ te vergroten. 
+
+\subsection{K-fold cross-validatie}
+
+Het doel achter K-fold cross-validatie is kijken hoe goed het model werkt op ongeziene data. Daarnaast dient het ook om omze hyperparameters te tunen. K-fold cross-validatie is een techniek die wordt toegepast op kleine datasets ($m < 10 000$). \\
+\newline
+De eerste stap van K-fold cross-validatie is het splitsen van onze dataset zoals op Figuur \ref{fig:kfold-step-1}. We zullen hier een splitsing maken in 80$\%$ voor de training set en 20$\%$ voor de test set. Dit splitsen van de dataset wordt ook wel \textit{data partitioning} genoemd. We kunnen nu zoals op Figuur \ref{fig:kfold-step-2}, 3 verschillende modellen gaan vergelijken met bijvoorbeeld elk een verschillend aantal lagen. Ter wijze van illustratie zullen we hiervoor 5 folds gebruiken. Dit betekent dat we onze trainingsdata in 5 gelijke delen opsplitsen. Hiervan zullen er telkens 4 als trainingsfold dienen en 1 als validatiefold. We kunnen dus 5 modellen bestuderen met telkens een andere validatiefold en andere trainingsfolds. Dit levert ons 5 verschillende performanties op, waarvan we het gemiddelde zullen berekenen. Dit is terug te zien op Figuur \ref{fig:kfold-folds}. Dit doen we voor elk van onze 3 mogelijke modellen. Op deze manier hebben we dus 15 modellen bestudeerd. We selecteren vervolgens het model dat de beste gemiddelde performantie oplevert. Dit wordt het model waarmee we verdergaan, zoals zichtbaar op Figuur \ref{fig:kfold-step-3}. Hierna zullen we het model testen met onze onafhankelijke testdata zodat we de performantie met deze data kunnen rapporteren (Figuur \ref{fig:kfold-step-4}). Ten slotte zouden we het bekomen model nog eens opnieuw kunnen trainen met de volledige dataset zoals op Figuur \ref{fig:kfold-step-5}. Dit is echter een optionele stap.
+\newpage
+\begin{figure}[h]
+	\centering
+	\begin{subfigure}{.70\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/21-kfold-step-1.png}
+		\caption{Stap 1 van K-fold cross-validatie}
+		\label{fig:kfold-step-1}
+	\end{subfigure}
+	\begin{subfigure}{.70\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/22-kfold-step-2.png}
+		\caption{Stap 2 van K-fold cross-validatie}
+		\label{fig:kfold-step-2}
+	\end{subfigure}
+	\begin{subfigure}{.5\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/26-kfold-folds.png}
+		\caption{Splitsing in training en validatie folds}
+		\label{fig:kfold-folds}
+	\end{subfigure}
+	\caption{K-fold cross-validatie (deel 1)}
+	\label{fig:kfold}
+\end{figure}
+\newpage
+\begin{figure}[h]\ContinuedFloat
+	\centering
+	\begin{subfigure}{.70\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/23-kfold-step-3.png}
+		\caption{Stap 3 van K-fold cross-validatie}
+		\label{fig:kfold-step-3}
+	\end{subfigure}
+	\begin{subfigure}{.70\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/24-kfold-step-4.png}
+		\caption{Stap 4 van K-fold cross-validatie}
+		\label{fig:kfold-step-4}
+	\end{subfigure}
+	\begin{subfigure}{.70\textwidth}
+		\centering
+		\includegraphics[width=\linewidth]{images/25-kfold-step-5.png}
+		\caption{Stap 5 van K-fold cross-validatie}
+		\label{fig:kfold-step-5}
+	\end{subfigure}
+	\caption{K-fold cross-validatie (deel 2)}
+\end{figure}
+
+\subsection{Error analyse}
+
+Bij error analyse gaan we manueel de voorbeelden in onze cross-validatie set waar het model fouten op heeft gemaakt onderzoeken om zo te kijken of er een systematische trend in deze fouten zit. Als dit het geval is, kunnen we trachten dit op te lossen door het model meer te trainen op data waarop het fouten maakte.
+
+\subsection{Confusion Matrix}
+Een confusion matrix is een tabel die het aantal \textit{true positives}, \textit{true negatives}, \textit{false positives }en \textit{false negatives} weergeeft, zoals afgebeeld op Figuur \ref{fig:confusion-matrix}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.4\linewidth]{images/27-confusion-matrix.png}
+	\caption{Confusion Matrix voor binaire classificatie}
+	\label{fig:confusion-matrix}
+\end{figure}
+\noindent
+We kunnen de accuraatheid berekenen als:
+\begin{equation}
+	Acc = \frac{TP + TN}{TP + TN + FP + FN}
+\end{equation}
+\noindent
+Dit levert ons een waarde tussen 0 en 1 op die we zo hoog mogelijk willen krijgen. \\
+\newline
+We kunnen op dezelfde manier een confusion matrix opstellen voor multi-class classificatie. Hierbij zal de accuraatheid opnieuw gelijk zijn aan het quotiënt van de som van alle \textit{true} labels en de som van alle predicties. Een belangrijke sidenote is wel dat accuraatheid enkel een goeie metriek is wanneer onze data gebalanceerd is. 
+
+\subsection{Precision en recall}
+
+De \textit{precision} en \textit{recall} zijn betere metrieken en worden als volgt berekend: 
+\begin{equation}
+	P  \frac{TP}{TP + FP}
+\end{equation}
+\begin{equation}
+	R = \frac{TP}{TP + FN}
+\end{equation}
+\noindent
+De \textit{precision} komt dus overeen met het aantal echte positieven ten opzichte van alle voorspelde positieven. Dit geeft dus weer hoeveel van de positieve voorspellingen effectief positief zijn. De \textit{recall} komt overeen met het aantal echte positieven ten opzichte van alle echte positieven. Dit geeft dus weer hoeveel van de echte positieven we correct voorspeld hebben. Beide maten geven ons een waarde tussen 0 en 1 die we zo hoog mogelijk willen krijgen. De \textit{true negatives} worden in beide metrieken niet meegerekend. \\
+\newline
+We moeten een afweging maken tussen \textit{precision} en \textit{recall}. Figuur \ref{fig:precision-recall} stelt dit grafisch voor. Stel je voor dat we een logistisch regressieprobleem hebben. Wanneer we met grote zekerheid $y=1$ willen voorspellen  (en dus de drempelwaarde verhogen), zal de \textit{precision} toenemen, maar de \textit{recall} afnemen. Omgekeerd, als we willen vermijden dat we te veel positieven missen (en dus de drempelwaarde verlagen), zal de \textit{precision} afnemen, maar de \textit{recall} toenemen. De \textit{sweet spot} die we zouden willen bereiken is daar waar zowel de \textit{precision} als de \textit{recall} gelijk zijn aan 1.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.4\linewidth]{images/28-precision-recall.png}
+	\caption{Afweging tussen \textit{precision} en \textit{recall}}
+	\label{fig:precision-recall}
+\end{figure}
+
+\subsection{F1 score}
+
+Het is moeilijk om de \textit{precision} en \textit{recall} te vergelijken. Wanneer we zouden proberen om het gemiddelde te nemen om beiden te vergelijken, merken we dat ongebalanceerde data een vertekend beeld geeft. Daarom is de F1 score uitgevonden om beide metrieken te vergelijken. Deze wordt als volgt berekend:
+\begin{equation}
+	F1 = 2\frac{P.R}{P +R}
+\end{equation}
+\noindent
+Dit zal opnieuw een waarde tussen 0 en 1 opleveren.
+
+\subsection{Toevoeging van extra data}
+
+Het is niet altijd mogelijk om nieuwe data toe te voegen. Daarom gaan we onze bestaande data modificeren om deze als extra data te gebruiken. Wanneer we bijvoorbeeld een model trainen met afbeeldingen van katten, kunnen we een bestaande foto een beetje scheef zetten of inzoomen om deze zo als nieuwe data te gebruiken. \\
+\newline
+Wanneer we onze performantie bestuderen in functie van onze hoeveelheid beschikbare data, zullen we zien dat deze altijd zal toenemen naarmate we meer data beschikbaar hebben en meer lagen kunnen toevoegen aan ons model. Daarom is er meer en meer een verschuiving aan het plaatsvinden van een conventionele model-centrische aanpak naar een data-centrische aanpak, waarbij we eerder focussen op onze hoeveelheid data dan op ons model zelf.
+
+\subsection{Transfer learning}
+
+Bij transfer learning gaan we starten vanaf een op voorhand getraind model dat getraind is op een grote dataset met hetzelfde input type als onze applicatie, en vervolgens dit model verder trainen met onze eigen data.
