@@ -22,7 +22,7 @@ We kunnen in deze formule duidelijk zien dat $g(z)$ gelijk zal zijn aan 0 voor k
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.5\textwidth]{images/9-sigmoid-function.png}
+	\includegraphics[width=0.45\textwidth]{images/9-sigmoid-function.png}
 	\caption{Sigmoid functie $g(z)$}
 	\label{fig:sigmoid}
 \end{figure}
@@ -72,7 +72,7 @@ Wanneer het label $y^{(i)}$ gelijk is aan 1, zal enkel de eerste term uit formul
 \subsection{\textit{Gradient descent} voor logistische regressie}
 
 We willen opnieuw de kostfunctie minimaliseren en dit kan opnieuw met \textit{gradient descent}. Dit gebeurt op dezelfde manier als bij lineaire regressie (formule \ref{eq:gradient-descent-lin-reg-multi-w} en formule \ref{eq:gradient-descent-lin-reg-multi-b}), al zal $f_{\vec{w},b}(\vec{x})$ hier natuurlijk wel gelijk zijn aan $g(\vec{w} \cdot \vec{x} + b)$ in plaats van $\vec{w} \cdot \vec{x} + b$.
-\newpage
+
 \subsection{Regularisatie}
 \subsubsection{\textit{Under- en overfitting}}
 Wanneer onze kostfunctie heel laag of zelfs 0 is, hebben we een model dat heel goed aansluit bij onze trainingsdata. Het zal echter niet goed aansluiten bij nieuwe data en is dus te complex om er aan te voldoen. We spreken dan van \textit{overfitting} of \textit{high variance}. Dit is zichtbaar op de linkergrafiek van Figuur \ref{fig:overfitting-underfitting}. \\
