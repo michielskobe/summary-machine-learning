@@ -6,7 +6,7 @@ Een binaire classificatie zal 2 mogelijke output-waarden hebben die we kunnen vo
 We zouden willen dat $f_{w,b}(x)$ tussen 0 en 1 ligt. Om dit te bereiken kunnen we logistische regressie gebruiken. De naam is een beetje verwarrend maar dit is een geval van classificatie en geen regressie. In de praktijk wordt dit gerealiseerd met een neuraal netwerk met één node. 
 
 \subsection{Logistische regressie }
-
+\label{ch:logistic-regression}
 Om ervoor te zorgen dat $f_{w,b}(x)$ tussen 0 en 1 ligt, passen we er de sigmoid of logistische functie op toe. Dit levert ons de volgende vergelijking op: 
 
 \begin{equation}
@@ -16,6 +16,7 @@ Om ervoor te zorgen dat $f_{w,b}(x)$ tussen 0 en 1 ligt, passen we er de sigmoid
 waarbij de sigmoid functie $g(z)$ gelijk is aan:
 \begin{equation}
 	g(z) = \frac{1}{1 + e^{-z}}
+	\label{eq:sigmoid}
 \end{equation}
 \noindent
 We kunnen in deze formule duidelijk zien dat $g(z)$ gelijk zal zijn aan 0 voor kleine waarden voor $z$, dat deze 1 zal zijn voor grote waarden voor $z$ en dat deze gelijk zal zijn aan $\frac{1}{2}$ voor een $z$ die 0 is. Dit wordt ook grafisch weergegeven op Figuur \ref{fig:sigmoid}.
