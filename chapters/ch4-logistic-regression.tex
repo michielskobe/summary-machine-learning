@@ -6,3 +6,119 @@ Een binaire classificatie zal 2 mogelijke output-waarden hebben die we kunnen vo
 We zouden willen dat $f_{w,b}(x)$ tussen 0 en 1 ligt. Om dit te bereiken kunnen we logistische regressie gebruiken. De naam is een beetje verwarrend maar dit is een geval van classificatie en geen regressie. In de praktijk wordt dit gerealiseerd met een neuraal netwerk met één node. 
 
 \subsection{Logistische regressie }
+
+Om ervoor te zorgen dat $f_{w,b}(x)$ tussen 0 en 1 ligt, passen we er de sigmoid of logistische functie op toe. Dit levert ons de volgende vergelijking op: 
+
+\begin{equation}
+	f_{\vec{w},b}(\vec{x}) = g(\vec{w} \cdot \vec{x} + b)
+	\label{eq:f-wb-log}
+\end{equation}
+waarbij de sigmoid functie $g(z)$ gelijk is aan:
+\begin{equation}
+	g(z) = \frac{1}{1 + e^{-z}}
+\end{equation}
+\noindent
+We kunnen in deze formule duidelijk zien dat $g(z)$ gelijk zal zijn aan 0 voor kleine waarden voor $z$, dat deze 1 zal zijn voor grote waarden voor $z$ en dat deze gelijk zal zijn aan $\frac{1}{2}$ voor een $z$ die 0 is. Dit wordt ook grafisch weergegeven op Figuur \ref{fig:sigmoid}.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\textwidth]{images/9-sigmoid-function.png}
+	\caption{Sigmoid functie $g(z)$}
+	\label{fig:sigmoid}
+\end{figure}
+\noindent
+Het resultaat van $f_{\vec{w},b}(\vec{x})$ is gelijk aan de kans dat onze $y$ gelijk is aan 1 voor de input $x$. Hiermee kunnen we ook complementen gaan berekenen. 
+
+\subsection{\textit{Decision boundary}}
+
+We kunnen bijvoorbeeld stellen dat we de waarde 1 toekennen aan onze output als $f_{\vec{w},b}(\vec{x}) \geq 0,5$ of als $z \geq 0$. We kennen dan een waarde 0 toe aan de output als $f_{\vec{w},b}(\vec{x}) < 0,5$ of als $z < 0$. We willen dus dat we zo ver mogelijk van deze waarde 0,5 vandaan zitten omdat we dan zeker zijn van onze output. Deze zone rond 0,5 (rond $z = 0$) noemen we de \textit{decision boundary} (ook wel scheidingsvlak). Dit zal de grens tussen beide klassen zijn. We kunnen dus op basis van de waarde van $z$ ($z < 0, z > 0$ of $z = 0$) bepalen tot welke klasse onze output behoort. Zoals we zien in formule \ref{eq:f-wb-log}, berekenen we $z$ als volgt:
+
+\begin{equation}
+	z = \vec{w} \cdot \vec{x} + b = \vec{w}^{T}\vec{x} + b = w_{1}x_{1} + w_{2}x_{2} + ... + w_{n}x_{n} + b
+\end{equation}
+
+\subsection{Kostfunctie voor logistische regressie}
+
+De kostfunctie zoals we die eerder gezien hebben (formule \ref{eq:cost-function-multi}), zal niet werken voor $f_{\vec{w},b}(\vec{x}) = \frac{1}{1 + e^{-(\vec{w} \cdot \vec{x} + b)}}$. In tegenstelling tot bij lineaire regressie, zal deze bij logistische regressie namelijk niet convex zijn. Bij logistische regressie ziet de \textit{loss}-functie er als volgt uit:
+
+ \begin{equation}
+ 	L(f_{\vec{w},b}(\vec{x}^{(i)}), y^{(i)}) = \left\{ \begin{matrix} -\ln(f_{\vec{w},b}(\vec{x}^{(i)})) & \mbox{voor } y^{(i)} = 1 \\ -\ln(1 - f_{\vec{w},b}(\vec{x}^{(i)}))  & \mbox{voor } y^{(i)} = 0 \end{matrix}\right .
+ 	\label{eq:loss-function-log}
+ \end{equation}
+\noindent
+Wanneer we deze verliesfuncties plotten voor $y^{(i)} = 1$ en $y^{(i)} = 0$, zien we dat het de \textit{loss} het laagste is wanneer $f_{\vec{w},b}(\vec{x}^{(i)})$ dicht aansluit bij zijn werkelijk label $y^{(i)}$ (Figuur \ref{fig:loss-function-log}). Op de horizontale as zien we $f_{\vec{w},b}(\vec{x}^{(i)})$ en op de verticale as zien we $L(f_{\vec{w},b}(\vec{x}^{(i)}), y^{(i)})$.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\textwidth]{images/10-loss-function-log.png}
+	\caption{Verliesfunctie voor logistische regressie}
+	\label{fig:loss-function-log}
+\end{figure}
+\noindent
+We krijgen vervolgens een kostfunctie die er als volgt uit ziet:
+\begin{equation}
+	J(\vec{w}, b) = \frac{1}{m} \sum_{i=1}^{m} \frac{1}{2}(f_{\vec{w},b}(\vec{x}^{(i)}) - y^{(i)})^{2} = \frac{1}{m} \sum_{i=1}^{m} L(f_{\vec{w},b}(\vec{x}^{(i)}), y^{(i)})
+	\label{eq:cost-function-log}
+\end{equation}
+\noindent
+Wanneer we formule \ref{eq:loss-function-log} en formule \ref{eq:cost-function-log} combineren, bekomen we de volgende vereenvoudigde kostfunctie:
+\begin{equation}
+	J(\vec{w}, b) = -\frac{1}{m} \sum_{i=1}^{m} y^{(i)}\ln(f_{\vec{w},b}(\vec{x}^{(i)})) + (1 - y^{(i)}) \ln(1 - f_{\vec{w},b}(\vec{x}^{(i)})) 
+	\label{eq:cost-function-log-simp}
+\end{equation}
+\noindent
+Wanneer het label $y^{(i)}$ gelijk is aan 1, zal enkel de eerste term uit formule \ref{eq:cost-function-log-simp} meetellen aangezien $(1 - y^{(i)})$ dan gelijk is aan 0. Wanneer het label $y^{(i)}$ gelijk is aan 0, zal op gelijkaardige manier enkel de tweede term uit formule \ref{eq:cost-function-log-simp} meetellen. Deze kostfunctie zal wel een convex verloop hebben. In de literatuur wordt er ook wel eens gesproken over \textit{logistic loss} of \textit{crossentropy loss}.
+
+\subsection{\textit{Gradient descent} voor logistische regressie}
+
+We willen opnieuw de kostfunctie minimaliseren en dit kan opnieuw met \textit{gradient descent}. Dit gebeurt op dezelfde manier als bij lineaire regressie (formule \ref{eq:gradient-descent-lin-reg-multi-w} en formule \ref{eq:gradient-descent-lin-reg-multi-b}), al zal $f_{\vec{w},b}(\vec{x})$ hier natuurlijk wel gelijk zijn aan $g(\vec{w} \cdot \vec{x} + b)$ in plaats van $\vec{w} \cdot \vec{x} + b$.
+\newpage
+\subsection{Regularisatie}
+\subsubsection{\textit{Under- en overfitting}}
+Wanneer onze kostfunctie heel laag of zelfs 0 is, hebben we een model dat heel goed aansluit bij onze trainingsdata. Het zal echter niet goed aansluiten bij nieuwe data en is dus te complex om er aan te voldoen. We spreken dan van \textit{overfitting} of \textit{high variance}. Dit is zichtbaar op de linkergrafiek van Figuur \ref{fig:overfitting-underfitting}. \\
+\newline
+Wanneer onze kostfunctie hoog is, hebben we een model dat niet goed aansluit bij onze data en te simpel is om er aan te voldoen. We spreken dan van \textit{underfitting} of \textit{high bias}. Dit is zichtbaar op de rechtergrafiek van Figuur \ref{fig:overfitting-underfitting}. \\
+\newline
+Idealiter bevinden we ons dus in een situatie zoals de middelste grafiek van Figuur \ref{fig:overfitting-underfitting}. Hier zullen we een fit hebben die redelijk goed aansluit bij onze data en een kostfunctie die groter is dan bij \textit{overfitting}, maar kleiner dan bij \textit{underfitting}. De \textit{decision boundary} zal dan ook tussen die van de andere gevallen in liggen.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{images/11-overfitting-underfitting.png}
+	\caption{\textit{Overfitting}, \textit{underfitting} en een goeie fit}
+	\label{fig:overfitting-underfitting}
+\end{figure}
+
+\subsubsection{\textit{Overfitting} tegengaan}
+
+Er zijn een aantal opties die we kunnen toepassen om \textit{overfitting} tegen te gaan:
+\begin{itemize}
+	\item Het aantal \textit{features} reduceren (\textit{feature selection / reduction}). Dit gebeurt vooral op basis van domeinkennis.
+	\item Meer trainingsdata toevoegen
+	\item Regularisatie
+\end{itemize}
+
+\subsubsection{Regularisatie}
+
+Bij regularisatie willen we het aandeel van bepaalde \textit{features} afstraffen zodat ze een minder grote invloed hebben om zo \textit{overfitting} tegen te gaan. Dit kunnen we doen door de overeenkomstige gewichten te betrekken in de kostfunctie, zodat deze ook geminimaliseerd zullen worden. 
+
+\paragraph{Regularisatie bij lineaire regressie}
+
+Voor lineaire regressie bekomen we dan de volgende kostfunctie wanneer we regularisatie toepassen:
+
+\begin{equation}
+	J(\vec{w}, b) = \frac{1}{2m} \sum_{i=1}^{m} (f_{\vec{w},b}(\vec{x}^{(i)}) - y^{(i)})^{2} + \frac{\lambda}{2m} \sum_{j=1}^{n} w_{j}^{2}
+	\label{eq:cost-function-lin-regul}
+\end{equation}
+\noindent
+Deze kostfunctie bestaat nu uit twee termen die elk hun eigen doel hebben. De eerste term heeft als doel om de data te fitten. De tweede term zal \textit{overfitting} trachten te compenseren. Hier is $\lambda$ een hyperparameter die ook wel de regularisatieparameter genoemd wordt. Wanneer deze te hoog wordt ingesteld, lopen we het risico op \textit{underfitting} aangezien de gewichten dan allemaal heel klein zullen zijn en vooral de constante \textit{bias} een invloed zal hebben. \\
+\newline
+In onze formules voor het \textit{gradient descent} algoritme, zal dit leiden tot een extra term $-\frac{\alpha \lambda}{m} w_{j}$ in formule \ref{eq:gradient-descent-lin-reg-multi-w}. Formule \ref{eq:gradient-descent-lin-reg-multi-b} zal ongewijzigd blijven aangezien deze term wegvalt wanneer we J($\vec{w}$, b) afleiden naar $b$. We kunnen hier dus ook weer terugzien dat de regularisatie ervoor zorgt dat de invloed van het gewicht afneemt. In de literatuur spreken we van \textit{weight decay}. 
+
+\paragraph{Regularisatie bij logistische regressie}
+
+Op dezelfde manier als in formule \ref{eq:cost-function-lin-regul}, zal er na toepassing van regularisatie een extra term toegevoegd worden aan de kostfunctie:
+\begin{equation}
+	J(\vec{w}, b) = -\frac{1}{m} \sum_{i=1}^{m} y^{(i)}\ln(f_{\vec{w},b}(\vec{x}^{(i)})) + (1 - y^{(i)}) \ln(1 - f_{\vec{w},b}(\vec{x}^{(i)})) + \frac{\lambda}{2m} \sum_{j=1}^{n} w_{j}^{2}
+\end{equation}
+\noindent
+Deze kostfunctie bestaat opnieuw uit twee termen die elk dezelfde doelen hebben als hierboven. Dit zal opnieuw leiden tot dezelfde extra term voor de \textit{weight decay} bij het toepassingen van \textit{gradient descent}.

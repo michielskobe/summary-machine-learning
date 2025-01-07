@@ -53,9 +53,11 @@ Vervolgens kunnen ook de formules voor \textit{gradient descent} aangepast worde
 
 \begin{equation}
 	w_{j} = w_{j} - \alpha \frac{\partial}{\partial w_{j}} J(\vec{w}, b) = w_{j} - \alpha \frac{1}{m}\sum_{i=1}^{m}[(f_{\vec{w},b}(x^{(i)}) - y^{(i)})x^{(i)}_{j}]
+	\label{eq:gradient-descent-lin-reg-multi-w}
 \end{equation}
 \begin{equation}
 	b = b - \alpha \frac{\partial}{\partial b} J(\vec{w}, b) = b - \alpha \frac{1}{m}\sum_{i=1}^{m}[(f_{\vec{w},b}(x^{(i)}) - y^{(i)})]
+	\label{eq:gradient-descent-lin-reg-multi-b}
 \end{equation}
 \noindent
 We zullen $b$ en $w_{j}$ nog steeds simultaan updaten voor $j = 1...n$, maar dit is ter vereenvoudiging weggelaten hier.
