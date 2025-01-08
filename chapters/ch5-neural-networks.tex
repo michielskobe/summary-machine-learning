@@ -13,9 +13,10 @@ Voor bovenstaand geval is dit dus:
 \begin{equation*}
 	{2 + 2 \choose 2} = \frac{4!}{2! 2!} = \frac{4.3.2.1}{2.1.2.1} = 6
 \end{equation*}
+\newpage
 \noindent
 We zullen inderdaad 6 parameters hebben, namelijk 5 gewichten en de \textit{bias}. We kunnen echter wel direct aan formule \ref{eq:nr-of-parameters} zien dat dit heel slecht zal schalen met het aantal \textit{features}. We zullen dus op zoek moeten gaan naar een manier om met minder complexiteit een goed model te vinden. \\
-\newpage
+\newline
 Figuur \ref{fig:non-linear-classification} toont een voorbeeld van een ongerelateerd niet-lineair classificatieprobleem ter illustratie.
 \begin{figure}[h]
 	\centering
@@ -36,12 +37,15 @@ Zoals we eerder al gezien hebben is logistische regressie eigenlijk een neuraal 
 \end{figure}
 \noindent
 De uitgang $a$ wordt ook wel de activatie genoemd. $z$ wordt ook wel logit genoemd. We kunnen dit blokje van Figuur \ref{fig:neural-network-model-log-reg} nu herhaaldelijk gaan gebruiken om het model van Figuur \ref{fig:neural-network-model-1} te bekomen. 
+
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.5\textwidth]{images/14-neural-network-model-1.png}
 	\caption{Neuraal netwerk met 1 \textit{hidden layer}}
 	\label{fig:neural-network-model-1}
 \end{figure}
+
+\noindent
 We kunnen de logit en activatie van elke node berekenen. Dit doen we als volgt:
 \begin{equation}
 	z_{i}^{[j]} = \vec{w}_{i}^{[j]} \cdot \vec{x} + b_{i}^{[j]}
@@ -92,11 +96,65 @@ Dit model kan uitgebreid worden tot meerdere lagen met een verschillend aantal k
 	\label{fig:neural-network-model-2}
 \end{figure}
 
+\paragraph{Neurale netwerken in Python}
+
+We kunnen gebruik maken van Tensorflow en Keras om een neuraal netwerk te implementeren in Python. Als we het model van Figuur \ref{fig:neural-network-model-2} zouden willen implementeren, ziet dat er als volgt uit:
+\begin{lstlisting}
+	model = Sequential(
+	    [
+	        tf.keras.Input(shape=(3,)), 
+	        Dense(4, activation='sigmoid'),
+	        Dense(3, activation='sigmoid'),
+	        Dense(1, activation='sigmoid'),
+	    ], name = "my_model"
+	)
+\end{lstlisting}
+\begin{lstlisting}
+	# Examine Weights shapes
+	[layer1, layer2, layer3] = model.layers
+	W1,b1 = layer1.get_weights()
+	W2,b2 = layer2.get_weights()
+	W3,b3 = layer3.get_weights()
+	print(f"W1 shape = {W1.shape}, b1 shape = {b1.shape}") 
+	# Output: W1 shape = (3, 4), b1 shape = (4,)
+	print(f"W2 shape = {W2.shape}, b2 shape = {b2.shape}") 
+	# Output: W2 shape = (4, 3), b2 shape = (3,)
+	print(f"W3 shape = {W3.shape}, b3 shape = {b3.shape}") 
+	# Output: W3 shape = (3, 1), b3 shape = (1,)
+\end{lstlisting}
+
 \subsection{\textit{Gradient descent} bij neurale netwerken}
 
 Aangezien neurale netwerken zoals we ze nu zien een combinatie is van ons logistische regressie-model, zal de kostfunctie en \textit{gradient descent} identiek werken, met enkel een toename van de parameters. Voor het voorbeeld van Figuur \ref{fig:neural-network-model-1} hebben we de volgende parameters: $W^{[1]}$, $b^{[1]}$, $W^{[2]}$ en $b^{[2]}$. Deze hebben respectievelijk de dimensies $n^{[1]}\times n^{[0]}$, $n^{[1]}\times 1$, $n^{[2]}\times n^{[1]}$ en $n^{[2]}\times 1$ waarbij $n^{[0]}$, $n^{[1]}$ en $n^{[2]}$ respectievelijk staan voor het aantal input \textit{features}, het aantal nodes van laag 1 en het aantal nodes van laag 2. De kostfunctie is gelijk aan $J(W^{[1]}, b^{[1]}, W^{[2]}, b^{[2]}) = \frac{1}{m} \sum_{i=1}^{m} L(\hat{y}^{(i)}, y^{(i)})$ waarbij $\hat{y}^{(i)}$ de predictie en $y^{(i)}$ het label is. De predictie komt overeen met de activatie van het model. \\
 \newline
 We gaan niet te diep in op \textit{gradient descent}. Bij \textit{forward propagation} gaan we van ingang naar uitgang en zullen we dus de kostfunctie berekenen. Bij \textit{backpropagation} gaan we in de omgekeerde richting werken en berekenen we de partiële afgeleiden van de kostfunctie naar $W$ en $b$ en passen we hun waarden op basis hiervan aan. Dit zullen we opnieuw herhaaldelijk uitvoeren tot we convergentie bereiken. 
+
+\paragraph{\textit{Gradient descent} in Python}
+Nadat we ons model geïmplementeerd hebben, kunnen we een kostfunctie opstellen voor het model en \textit{gradient descent } toepassen. Dit doen we als volgt:
+
+\begin{lstlisting}
+	model.compile(
+	    loss=tf.keras.losses.BinaryCrossentropy(),
+	    optimizer=tf.keras.optimizers.Adam(0.001),
+	)
+\end{lstlisting}
+
+\paragraph{Predictie in Python}
+Hierna kunnen we ons model trainen en het vervolgens gebruiken om een voorspelling voor bijvoorbeeld het eerste element van onze input te maken. Hiervoor kunnen we de volgende code gebruiken:
+
+\begin{lstlisting}
+	# Het model trainen
+	model.fit(
+	    X,y,
+	    epochs=20
+	)
+	# Een voorspelling maken
+	prediction = model.predict(X[0])
+	if prediction >= 0.5:
+	    yhat = 1
+	else:
+	    yhat = 0
+\end{lstlisting}
 
 \subsection{\textit{Multi-class} classificatie}
 
