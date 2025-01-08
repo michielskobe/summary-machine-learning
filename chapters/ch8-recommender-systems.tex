@@ -1,7 +1,7 @@
 \section{Aanbevelingssystemen (Recommender systems)}
 
 Aanbevelingssystemen zijn systemen die content aanbevelen aan gebruikers op basis van hun profiel. Dit vindt toepassingen in streamingdiensten zoals Netflix en Spotify, maar ook in bijvoorbeeld zoekmachines zoals Google of op sociale media.
-
+\newpage
 \subsection{Aanbevelingssystemen voor regressieproblemen}
 
 Voordat we beginnen met het behandelen van een regressieprobleem bij aanbevelingssystemen, zullen we eerst een aantal notaties definiëren:
@@ -117,7 +117,6 @@ Omdat het aantal \textit{features} waarschijnlijk niet gelijk zal  zijn voor de 
 Als we kijken naar de toepassingen waarbij aanbevelingssystemen gebruikt worden, zien we direct dat deze over een grote hoeveelheid data beschikken met duizenden tot miljoenen datapunten. Het is niet mogelijk om deze allemaal in ons model te gebruiken. Daarom zullen we gebruik maken van \textit{retrieval and ranking}.\\
 \newline
 We gaan eerst een deelverzameling maken met mogelijke kandidaten. Stel dat we bijvoorbeeld een film willen aanraden, kunnen we de 10 meest gelijkaardige films selecteren voor de 10 laatste films die de gebruiker gekeken heeft. We kunnen vervolgens binnen zijn of haar 3 meest gekeken genres de top 10 films selecteren. Ten slotte kunnen we nog de top 20 films op zijn of haar locatie selecteren. Rekening houdend met duplicaten en films die de gebruiker al gekeken heeft, levert dit ons een lijst van maximum 150 films op. Dit is al veel handelbaarder dan de grote hoeveelheid waaruit we eerst de keuze hadden. Vervolgens kunnen we deze films in ons model steken om ze te ranken en de beste aanbeveling te kiezen.
-\newpage
 
 \subsection{Ethische aspecten  van aanbevelingssystemen}
 
