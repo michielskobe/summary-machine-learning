@@ -1,1 +1,130 @@
 \section{Aanbevelingssystemen (Recommender systems)}
+
+Aanbevelingssystemen zijn systemen die content aanbevelen aan gebruikers op basis van hun profiel. Dit vindt toepassingen in streamingdiensten zoals Netflix en Spotify, maar ook in bijvoorbeeld zoekmachines zoals Google of op sociale media.
+
+\subsection{Aanbevelingssystemen voor regressieproblemen}
+
+Voordat we beginnen met het behandelen van een regressieprobleem bij aanbevelingssystemen, zullen we eerst een aantal notaties definiëren:
+\begin{itemize}
+	\item $r(i, j)$: Geeft weer of de gebruiker $j$ content $i$ een score gegeven heeft (1) of niet (0)
+	\item $y^{(i, j)}$: De score van gebruiker $j$ voor content $i$ (als deze gedefinieerd is)
+	\item $\vec{w}^{(j)}, b^{(j)}$: De parameters voor gebruiker $j$
+	\item $\vec{x}^{(i)}$: De \textit{features} voor content $i$
+	\item $n_{u}$: Het aantal gebruikers
+	\item $n_{m}$: De hoeveelheid content
+	\item $m^{(j)}$: De hoeveelheid content die gebruiker $j$ een score gegeven heeft
+\end{itemize}
+\noindent
+We kunnen vervolgens een predictie voor de score maken zoals we dit eerder bij regressie deden:
+\begin{equation}
+	\hat{y}^{(i, j)} = \vec{w}^{(j)} \cdot \vec{x}^{(i)} + b^{(j)}
+	\label{eq:prediction}
+\end{equation}
+
+\subsubsection{Gebruikersprofielen leren}
+
+We kunnen nu, wanneer we de \textit{features} en de scores van de gebruikers kennen, de het profiel van gebruiker $j$ en dus de parameters $\vec{w}^{(j)}$ en $b^{(j)}$ gaan leren. Dit doen we door de volgende kostfunctie de minimaliseren voor gebruiker $j$:
+\begin{equation}
+	J(\vec{w}^{(j)}, b^{(j)}) = \frac{1}{2} \sum_{i:r(i, j) = 1} (\vec{w}^{(j)} \cdot \vec{x}^{(i)} + b^{(j)} - y^{(i, j)})^{2} + \frac{\lambda}{2} \sum_{k=1}^{n}(w_{k}^{(j)})^{2}
+\end{equation}
+\noindent
+Wanneer we dit voor alle gebruikers willen doen, bekomen we de volgende formule:
+\begin{equation}
+	J \begin{pmatrix} \vec{w}^{(1)} & ... & \vec{w}^{(n_{u})}\\ b^{(1)} & ... & b^{(n_{u})} \end{pmatrix} 
+	= \frac{1}{2} \sum_{j=1}^{n_{u}} \sum_{i:r(i, j) = 1} (\vec{w}^{(j)} \cdot \vec{x}^{(i)} + b^{(j)} - y^{(i, j)})^{2} 
+	+ \frac{\lambda}{2} \sum_{j=1}^{n_{u}} \sum_{k=1}^{n}(w_{k}^{(j)})^{2}
+	\label{eq:user-cost}
+\end{equation}
+
+\subsubsection{Contentprofielen leren}
+
+Op dezelfde manier kunnen we, wanneer we de gebruikersprofielen en de scores van de gebruikers kennen, de \textit{features} voor content $i$ ($\vec{x}^{(i)}$) gaan leren. Dit doen we door de volgende kostfunctie de minimaliseren voor content $i$:
+\begin{equation}
+	J(\vec{x}^{(i)}) = \frac{1}{2} \sum_{j:r(i, j) = 1} (\vec{w}^{(j)} \cdot \vec{x}^{(i)} + b^{(j)} - y^{(i, j)})^{2} + \frac{\lambda}{2} \sum_{k=1}^{n}(x_{k}^{(i)})^{2}
+\end{equation}
+\noindent
+Wanneer we dit voor alle content willen doen, bekomen we de volgende formule:
+\begin{equation}
+	J \begin{pmatrix} \vec{x}^{(1)} & ... & \vec{x}^{(n_{m})}\end{pmatrix} 
+	= \frac{1}{2} \sum_{i=1}^{n_{m}} \sum_{j:r(i, j) = 1} (\vec{w}^{(j)} \cdot \vec{x}^{(i)} + b^{(j)} - y^{(i, j)})^{2} 
+	+ \frac{\lambda}{2} \sum_{i=1}^{n_{m}} \sum_{k=1}^{n}(x_{k}^{(j)})^{2}
+	\label{eq:content-cost}
+\end{equation}
+
+\subsection{Aanbevelingssystemen voor classificatieproblemen (binaire labels)}
+
+Wanneer we content bestuderen, kunnen we ook een heleboel data classificeren. Zo kunnen we bijhouden of een gebruiker $j$ een item gekocht heeft nadat hij dit gezien heeft, of de gebruiker het item leuk vond, of de gebruiker er voor minstens 30 seconden interactie mee gehad heeft en of de gebruiker op het item geklikt heeft. We zullen bij deze voorbeelden het label 1 toekennen als dit het geval is, het label 0 toekennen als dit niet het geval is en het label ongedefinieerd laten als de gebruiker het item nog niet gezien heeft. \\
+\newline
+We kunnen net zoals we eerder bij classificatie gedaan hebben het label voorspellen, het verlies berekenen en de kostfunctie opstellen:
+\begin{equation}
+	\hat{y}^{(i, j)} = \frac{1}{1 + e^{-(\vec{w}^{(j)} \cdot \vec{x}^{(i)} + b^{(j)})}}
+\end{equation}
+\begin{equation}
+	L(\hat{y}^{(i, j)}, y^{(i, j)}) = -y^{(i, j)} \ln(\hat{y}^{(i, j)}) - (1 - y^{(i, j)}) \ln(1 - \hat{y}^{(i, j)}) 
+\end{equation}
+\begin{equation}
+	J(\vec{w}, b, \vec{x}) = \sum_{(i, j):r(i, j) = 1} L(\hat{y}^{(i, j)}, y^{(i, j)})
+	+ \frac{\lambda}{2} \sum_{j=1}^{n_{u}} \sum_{k=1}^{n}(w_{k}^{(j)})^{2}
+	+ \frac{\lambda}{2} \sum_{i=1}^{n_{m}} \sum_{k=1}^{n}(x_{k}^{(j)})^{2}
+\end{equation}
+
+\subsection{Collaboratief filteren}
+
+Bij collaboratief filteren gaan we items aanraden op basis van scores van gebruikers die gelijkaardige scores als ons gaven. We kunnen vervolgens ook  zowel de parameters van de gebruikers als de content trachten te minimaliseren om zo een optimale aanbeveling te maken. Dit doen we door de kostfuncties van formule \ref{eq:user-cost} en  \ref{eq:content-cost} te combineren. We bekomen de volgende kostfunctie:
+\begin{equation}
+	J \begin{pmatrix} \vec{w}^{(1)} & ... & \vec{w}^{(n_{u})} \\ b^{(1)} & ... & b^{(n_{u})} \\ \vec{x}^{(1)} & ... & \vec{x}^{(n_{m})} \end{pmatrix} 
+	= \frac{1}{2} \sum_{(i, j):r(i, j) = 1} (\vec{w}^{(j)} \cdot \vec{x}^{(i)} + b^{(j)} - y^{(i, j)})^{2} 
+	+ \frac{\lambda}{2} \sum_{j=1}^{n_{u}} \sum_{k=1}^{n}(w_{k}^{(j)})^{2}
+	+ \frac{\lambda}{2} \sum_{i=1}^{n_{m}} \sum_{k=1}^{n}(x_{k}^{(j)})^{2}
+\end{equation}
+\noindent
+We kunnen deze kostfunctie opnieuw minimaliseren door \textit{gradient descent} toe te passen. We initialiseren de waarden voor $\vec{w}^{(1)}, ..., \vec{w}^{(n_{u})}; b^{(1)}, ..., b^{(n_{u})}; \vec{x}^{(1)}, ..., \vec{x}^{(n_{m})}$ op random waarden en passen vervolgens $w_{k}^{(j)}$, $b^{(j)}$ en $x_{k}^{(i)}$ aan voor $j$ gaande van 1 tot $n_{u}$, $i$ gaande van 1 tot $n_{m}$ en $k$ gaande van 1 tot $n$:
+\begin{equation}
+	w_{k}^{(j)} = w_{k}^{(j)} - \alpha \frac{\partial J(\vec{w}, b, \vec{x})}{\partial w_{k}^{(j)}}
+\end{equation}
+\begin{equation}
+	b^{(j)} = b^{(j)} - \alpha \frac{\partial J(\vec{w}, b, \vec{x})}{\partial b^{(j)}}
+\end{equation}
+\begin{equation}
+	x_{k}^{(i)} = x_{k}^{(i)} - \alpha \frac{\partial J(\vec{w}, b, \vec{x})}{\partial x_{k}^{(i)}}
+\end{equation}
+\noindent
+Dit laat ons toe om voor een gebruiker met parameters $\vec{w}^{(j)}$ en $b^{(j)}$ en content met \textit{features} $\vec{x}^{(i)}$ een rating te voorspellen met formule \ref{eq:prediction}.
+
+\subsubsection{\textit{Mean normalization}}
+
+Wanneer we een nieuwe gebruiker toevoegen die nog geen content beoordeeld heeft, zal door de minimalisatie van de kostfunctie de parameter $\vec{w}^{(j)}$ als nulvector geïnitialiseerd worden. Wanneer we vervolgens voor deze gebruiker een score willen voorspellen, zal dit een nulscore opleveren. Dit is natuurlijk geen goede voorspelling. Om dit op te lossen, zullen we \textit{mean normalization} toepassen. \\
+\newline
+Bij \textit{mean normalisation} zullen we het gemiddelde nemen van de scores van de verschillende gebruikers. Dit gemiddelde zullen we toevoegen aan de voorspelde score van de nieuwe gebruiker. Hierdoor zal deze score niet meer gelijk zijn aan 0, maar aan deze gemiddelde score. 
+
+\subsubsection{Gerelateerde items vinden}
+
+We hebben dus voor elk product $i$ een \textit{feature} vector $\vec{x}^{(i)}$. Om producten $\vec{x}^{(k)}$ te vinden die gerelateerd zijn aan ons product $\vec{x}^{(i)}$, kunnen we de afstand tussen de vectoren normaliseren en deze vergelijken met een bepaalde drempelwaarde. Deze berekening ziet er als volgt uit:
+\begin{equation}
+	|| \vec{x}^{(k)} - \vec{x}^{(i)} ||^{2} = \sum_{l=1}^{n} (x_{l}^{(k)} - x_{l}^{(i)})^{2}
+\end{equation}
+
+\subsection{Content-gebaseerd filteren}
+
+Zoals we eerder al zagen is het nadeel bij collaboratief filteren dat het moeilijk is om nieuwe items te rangschikken die door weinig gebruikers beoordeeld zijn en om relevante aanbevelingen te maken voor nieuwe gebruikers die nauwelijks iets beoordeeld hebben. Daarom kunnen we ook overschakelen op content-gebaseerd filteren, waarbij we eigenschappen van items of gebruikers gebruiken in plaats van ratings van andere gebruikers. Voorbeelden van zo een \textit{user features} zijn leeftijd, geslacht, locatie, gemiddelde score per genre. Voorbeelden van \textit{item features} zijn jaartal, genre en gemiddelde rating. We kunnen hier direct uit afleiden dat het aantal \textit{features} waarschijnlijk niet gelijk zal  zijn voor de gebruikers en de items. 
+
+\subsubsection{\textit{Deep learning}}
+
+Omdat het aantal \textit{features} waarschijnlijk niet gelijk zal  zijn voor de gebruikers en de items, zullen we eerst gebruik maken van neurale netwerken, zodat de \textit{feature} vectoren voor gebruiker en item dezelfde grootte hebben aan de uitgangen van hun model. Als dit het geval is, kunnen we ze gebruiken om een voorspelling te maken.
+
+\subsection{Aanbevelingen maken van een grote catalogus}
+
+Als we kijken naar de toepassingen waarbij aanbevelingssystemen gebruikt worden, zien we direct dat deze over een grote hoeveelheid data beschikken met duizenden tot miljoenen datapunten. Het is niet mogelijk om deze allemaal in ons model te gebruiken. Daarom zullen we gebruik maken van \textit{retrieval and ranking}.\\
+\newline
+We gaan eerst een deelverzameling maken met mogelijke kandidaten. Stel dat we bijvoorbeeld een film willen aanraden, kunnen we de 10 meest gelijkaardige films selecteren voor de 10 laatste films die de gebruiker gekeken heeft. We kunnen vervolgens binnen zijn of haar 3 meest gekeken genres de top 10 films selecteren. Ten slotte kunnen we nog de top 20 films op zijn of haar locatie selecteren. Rekening houdend met duplicaten en films die de gebruiker al gekeken heeft, levert dit ons een lijst van maximum 150 films op. Dit is al veel handelbaarder dan de grote hoeveelheid waaruit we eerst de keuze hadden. Vervolgens kunnen we deze films in ons model steken om ze te ranken en de beste aanbeveling te kiezen.
+\newpage
+
+\subsection{Ethische aspecten  van aanbevelingssystemen}
+
+Er zijn een aantal ethische aspecten waarmee we rekening moeten houden op vlak van aanbevelingssystemen: 
+\begin{itemize}
+	\item Wanneer we content aanraden, lopen we natuurlijk het risico dat de gebruiker in een zogenaamde \textit{echo chamber} terechtkomt waarbij hij altijd dezelfde data ontvangt. Dit zou kunnen leiden tot een kleine informatierange wat een toxische houding tegenover andere gedachtegangen kan veroorzaken.
+	\item We moeten een zekere balans vinden tussen het opstellen van een goed profiel voor de gebruiker en de gewenste privacy van de gebruiker.
+	\item Soms kan er een verschil zitten tussen het product dat het best aansluit bij de gebruiker en het product dat de meeste winstmarge oplevert voor het bedrijf. Er moet zorgvuldig mee omgesprongen worden hoe we hiermee omgaan.
+	\item Wanneer we video's aanbevelen die leiden tot de grootste kijktijd, lopen we het risico op verslaving.
+\end{itemize}
