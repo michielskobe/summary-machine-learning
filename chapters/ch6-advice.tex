@@ -5,11 +5,9 @@
 Wanneer we ons model testen met nieuwe data, zou het kunnen dat er grote fouten in de voorspellingen zitten. Er zijn een grote verscheidenheid aan zaken die we kunnen proberen om dit op te lossen:
 \begin{itemize}
 	\item Meer trainingsdata toevoegen
-	\item Minder \textit{features} gebruiken
-	\item Meer \textit{features} gebruiken
+	\item Minder of minder \textit{features} gebruiken
 	\item Extra polynomiale \textit{features} toevoegen
-	\item $\lambda$ kleiner maken
-	\item $\lambda$ groter maken
+	\item $\lambda$ kleiner of groter maken
 \end{itemize}
 \noindent
 Een diagnostiek is een test die we kunnen runnen om inzicht te krijgen in wat er wel of niet werkt binnen ons model en hoe we dit best kunnen verbeteren. In dit hoofdstuk zullen we enkele manieren bekijken. 
@@ -30,6 +28,15 @@ Om de performantie van ons model te onderzoeken, zullen we naar de kostfunctie z
 \end{equation}
 \noindent
 Wanneer we nu een aantal modellen hebben die bestaan uit veeltermen van een bepaalde graad, kunnen we gaan kijken wel model het meest geschikt is voor ons probleem door altijd onze kostfunctie te minimaliseren. We kunnen de gevonden parameters vervolgens gebruiken om de trainingsfout en cross-validatiefout te berekenen. De trainingsfout zal kleiner worden naarmate de graad van ons model groter wordt. Dit is echter niet het geval voor de cross-validatiefout. Deze zal ergens een optimaal minimum hebben. We zijn op zoek naar het model waarbij dit het geval is, aangezien deze de kleinste fout heeft op ongeziene data. We kunnen vervolgens nog de gewichten van dit model gebruiken om de kost op onze test set te berekenen zodat we die kunnen rapporteren, maar dit gebeurt echter niet altijd in de literatuur. 
+
+\paragraph{Training, validatie en test sets in Python}
+
+We kunnen de dataset als volgt splitsen in trainings -, cross-validatie - en testdata in Python:
+\begin{lstlisting}
+	#split the data using sklearn routine 
+	X_train, X_, y_train, y_ = train_test_split(X,y,test_size=0.40, random_state=1)
+	X_cv, X_test, y_cv, y_test = train_test_split(X_,y_,test_size=0.50, random_state=1)
+\end{lstlisting}
 
 \subsection{\textit{Bias} en variantie diagnosticeren}
 
