@@ -98,7 +98,7 @@ In Python kunnen we de kostfunctie als volgt berekenen:
 
 \subsection{\textit{Gradient descent}}
 
-\textit{Gradient descent} is een manier om de kostfunctie te minimaliseren. Herbij starten we vanaf een bepaalde waarde voor $w$ en $b$ en blijven we deze veranderen om $J(w, b)$ te doen afnemen om zo op een minimum uit te komen. Dit doen we met de gradiënt ($\nabla J = (\frac{\partial J}{\partial w}, \frac{\partial J}{\partial b})$). Deze geeft in de wiskunde de richting van de steilste helling weer. Wiskundig gezien ziet het \textit{gradient descent} algoritme er als volgt uit:
+\textit{Gradient descent} is een manier om de kostfunctie te minimaliseren. Hierbij starten we vanaf een bepaalde waarde voor $w$ en $b$ en blijven we deze veranderen om $J(w, b)$ te doen afnemen om zo op een minimum uit te komen. Dit doen we met de gradiënt ($\nabla J = (\frac{\partial J}{\partial w}, \frac{\partial J}{\partial b})$). Deze geeft in de wiskunde de richting van de steilste helling weer. Wiskundig gezien ziet het \textit{gradient descent} algoritme er als volgt uit:
 
 \begin{equation}
 	w_{temp} = w - \alpha \frac{\partial}{\partial w} J(w, b)
@@ -115,7 +115,7 @@ In Python kunnen we de kostfunctie als volgt berekenen:
 	b = b_{temp}
 \end{equation}
 \noindent
-We werken met een tijdelijke $w$ en $b$ ($w_{temp}$ en $b_{temp}$) omdat we in onze berekening voor de nieuwe $w$ en $b$ ook gebruik maken van de huidige $w$ en $b$, en we de waarden simultaan willen aanpassen. Indien we geen gebruik zouden maken van deze tijdelijke variabelen, zouden we de geupdatete versie van $w$ al gebruiken in de berekening van de nieuwe $b$ en dit willen we niet. We zullen de waarden van $w$ en $b$ blijven aanpassen tot we convergentie bereiken. Dit zal betekenen dat we een minimum bereikt hebben. \\
+We werken met een tijdelijke $w$ en $b$ ($w_{temp}$ en $b_{temp}$) omdat we in onze berekening voor de nieuwe $w$ en $b$ ook gebruik maken van de huidige $w$ en $b$, en we de waarden simultaan willen aanpassen. Indien we geen gebruik zouden maken van deze tijdelijke variabelen, zouden we de geüpdatete versie van $w$ al gebruiken in de berekening van de nieuwe $b$ en dit willen we niet. We zullen de waarden van $w$ en $b$ blijven aanpassen tot we convergentie bereiken. Dit zal betekenen dat we een minimum bereikt hebben. \\
 \newline
 In formule \ref{eq:w-temp} en formule \ref{eq:b-temp} maken we ook gebruik van de \textit{learning rate} $\alpha$. Dit is een hyperparameter die we goed moeten instellen. Een hyperparameter is niet een parameter die het model definieert, maar wel een parameter die ingesteld moet worden om tot een model te komen. Wanneer $\alpha$ te klein is, zal de \textit{gradient descent} heel langzaam verlopen. Wanneer $\alpha$ te groot is, kan het zijn dat we onze \textit{gradient descent} in te grote stappen uitvoeren en voorbij het minimum schieten. Hierdoor zou het kunnen dat onze convergentie faalt. Het instellen van deze parameter gebeurt typisch in stappen van bijvoorbeeld een factor 3 (0,001 $\rightarrow$ 0,003 $\rightarrow$ 0,01 $\rightarrow$ 0,03 $\rightarrow$ ...). \\
 \newline
