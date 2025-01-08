@@ -54,6 +54,47 @@ Deze kostfunctie (ook wel \textit{squared error function}) is gelijk aan de geno
 	\label{fig:cost-function}
 \end{figure}
 \newpage
+\paragraph{De kostfunctie in Python}
+In Python kunnen we de kostfunctie als volgt berekenen:
+
+\begin{lstlisting}
+	def compute_cost(x, y, w, b): 
+	    """
+	    Computes the cost function for linear regression.
+	
+	    Args:
+	        x (ndarray): Shape (m,) Input to the model (City population) 
+	        y (ndarray): Shape (m,) Label (Actual profits for the cities)
+	        w, b (scalar): Parameters of the model
+	        
+	    Returns
+	        total_cost (float): The cost of using w,b as the parameters for linear regression to fit the data points in x and y
+	    """
+\end{lstlisting}
+\begin{lstlisting}
+	    # number of training examples
+	    m = x.shape[0] 
+	
+	    # You need to return this variable correctly
+	    total_cost = 0
+	
+	    # Variable to keep track of sum of cost from each example
+	    cost_sum = 0
+	
+	    # Loop over training examples
+	    for i in range(m):
+	        # The prediction f_wb for the ith example
+	        f_wb = w * x[i] + b
+	        # The cost associated with the ith example
+	        cost = (f_wb - y[i])**2
+	        # Add to sum of cost for each example
+	        cost_sum = cost_sum + cost 
+	        
+	    # Get the total cost as the sum divided by (2*m)
+	    total_cost = (1 / (2 * m)) * cost_sum
+	
+	    return total_cost
+\end{lstlisting}
 
 \subsection{\textit{Gradient descent}}
 
@@ -73,13 +114,14 @@ Deze kostfunctie (ook wel \textit{squared error function}) is gelijk aan de geno
 \begin{equation}
 	b = b_{temp}
 \end{equation}
-\newpage
 \noindent
 We werken met een tijdelijke $w$ en $b$ ($w_{temp}$ en $b_{temp}$) omdat we in onze berekening voor de nieuwe $w$ en $b$ ook gebruik maken van de huidige $w$ en $b$, en we de waarden simultaan willen aanpassen. Indien we geen gebruik zouden maken van deze tijdelijke variabelen, zouden we de geupdatete versie van $w$ al gebruiken in de berekening van de nieuwe $b$ en dit willen we niet. We zullen de waarden van $w$ en $b$ blijven aanpassen tot we convergentie bereiken. Dit zal betekenen dat we een minimum bereikt hebben. \\
 \newline
 In formule \ref{eq:w-temp} en formule \ref{eq:b-temp} maken we ook gebruik van de \textit{learning rate} $\alpha$. Dit is een hyperparameter die we goed moeten instellen. Een hyperparameter is niet een parameter die het model definieert, maar wel een parameter die ingesteld moet worden om tot een model te komen. Wanneer $\alpha$ te klein is, zal de \textit{gradient descent} heel langzaam verlopen. Wanneer $\alpha$ te groot is, kan het zijn dat we onze \textit{gradient descent} in te grote stappen uitvoeren en voorbij het minimum schieten. Hierdoor zou het kunnen dat onze convergentie faalt. Het instellen van deze parameter gebeurt typisch in stappen van bijvoorbeeld een factor 3 (0,001 $\rightarrow$ 0,003 $\rightarrow$ 0,01 $\rightarrow$ 0,03 $\rightarrow$ ...). \\
 \newline
-Een valkuil van dit algoritme is dat we in een lokaal minimum terechtgekomen. Alhoewel dit zelden voorkomt in de praktijk omdat onze modellen in het merendeel van de gevallen convex zijn, gaan we toch even bespreken hoe we dit kunnen verhinderen. Een idee hiervoor is dat we onze initiële gok voor $w$ en $b$ een tiental keer op een willekeurige positie kunnen wagen en dan naar convergentie kunnen gaan. Wanneer we het minimum van deze random initialisaties nemen, zijn we vrij zeker dat dit het absolute minimum is. Dit is geen waterdicht systeem, maar aangezien de kans op een lokaal minimum klein is, is deze methode voldoende.
+Een valkuil van dit algoritme is dat we in een lokaal minimum terechtgekomen. Alhoewel dit zelden voorkomt in de praktijk omdat onze modellen in het merendeel van de gevallen convex zijn, gaan we toch even bespreken hoe we dit kunnen verhinderen. Een idee hiervoor is dat we onze initiële gok voor $w$ en $b$ een tiental keer op een willekeurige positie kunnen wagen en dan naar convergentie kunnen gaan. \\
+\newline
+Wanneer we het minimum van deze random initialisaties nemen, zijn we vrij zeker dat dit het absolute minimum is. Dit is geen waterdicht systeem, maar aangezien de kans op een lokaal minimum klein is, is deze methode voldoende.
 
 \subsection{\textit{Gradient descent} voor lineaire regressie}
 
@@ -104,6 +146,93 @@ Figuur \ref{fig:gradient-descent} toont ons het resultaat van het uitvoeren van 
 	\caption{\textit{Gradient descent} bij lineaire regressie}
 	\label{fig:gradient-descent}
 \end{figure}
+
+\paragraph{\textit{Gradient descent} in Python}
+In Python kunnen we de gradiënt als volgt berekenen:
+\begin{lstlisting}
+	def compute_gradient(x, y, w, b): 
+	    """
+	    Computes the gradient for linear regression 
+	    Args:
+	        x (ndarray): Shape (m,) Input to the model (City population) 
+	        y (ndarray): Shape (m,) Label (Actual profits for the cities)
+	        w, b (scalar): Parameters of the model  
+	    Returns
+	        dj_dw (scalar): The gradient of the cost w.r.t. the parameters w
+	        dj_db (scalar): The gradient of the cost w.r.t. the parameter b     
+	    """
+\end{lstlisting}
+\newpage
+\begin{lstlisting}
+	    # Number of training examples
+	    m = x.shape[0]
+	
+	    # You need to return the following variables correctly
+	    dj_dw = 0
+	    dj_db = 0
+	
+	    # Loop over examples
+	    for i in range(m):  
+	        # The prediction f_wb for the ith example
+	        f_wb = w * x[i] + b
+	
+	        # The gradient for w from the ith example 
+	        dj_dw_i = (f_wb - y[i]) * x[i]
+	
+	        # The gradient for b from the ith example 
+	        dj_db_i = f_wb - y[i]
+	
+	        # Update dj_db
+	        dj_db += dj_db_i
+	
+	        # Update dj_dw
+	        dj_dw += dj_dw_i
+	
+	    # Divide both dj_dw and dj_db by m
+	    dj_dw = dj_dw / m
+	    dj_db = dj_db / m
+	
+	    return dj_dw, dj_db
+\end{lstlisting}
+\noindent
+\\
+Vervolgens kunnen we deze definitie gebruiken om \textit{gradient descent} uit te voeren:
+
+\begin{lstlisting}
+	def gradient_descent(x, y, w_in, b_in, alpha, num_iters): 
+	    """
+	    Performs batch gradient descent to learn theta. Updates theta by taking num_iters gradient steps with learning rate alpha
+	
+	    Args:
+	        x :    (ndarray): Shape (m,)
+	        y :    (ndarray): Shape (m,)
+	        w_in, b_in : (scalar) Initial values of parameters of the model
+	        alpha : (float) Learning rate
+	        num_iters : (int) number of iterations to run gradient descent
+	    Returns
+	        w : (ndarray): Shape (1,) Updated values of parameters of the model after running gradient descent
+	        b : (scalar) Updated value of parameter of the model after running gradient descent
+	    """
+	
+	    # Number of training examples
+	    m = len(x)
+	
+	    # Set initial value to w and b
+	    w = copy.deepcopy(w_in)
+	    b = b_in
+\end{lstlisting}
+\newpage
+\begin{lstlisting}	
+	    for i in range(num_iters):
+	        # Calculate the gradient and update the parameters
+	        dj_dw, dj_db = compute_gradient(x, y, w, b )  
+	
+	        # Update Parameters using w, b, alpha and gradient
+	        w = w - alpha * dj_dw               
+	        b = b - alpha * dj_db               
+	
+	    return w, b
+\end{lstlisting}
 
 \subsection{\textit{Batch gradient descent}}
 
