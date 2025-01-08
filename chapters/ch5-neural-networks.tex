@@ -155,6 +155,8 @@ Hierna kunnen we ons model trainen en het vervolgens gebruiken om een voorspelli
 	else:
 	    yhat = 0
 \end{lstlisting}
+\noindent
+Het aantal epochs geeft aan hoe vaak de dataset gebruikt moet worden tijdens het trainen. Om efficiënt te werken wordt de dataset in Tensorflow gesplitst in batches van 32. Deze parameter zouden we ook kunnen aanpassen in `\textit{model.fit()}'.
 
 \subsection{\textit{Multi-class} classificatie}
 
@@ -174,7 +176,7 @@ Dit levert ons de volgende kostfunctie op:
 \end{equation}
 
 \subsection{Softmax}
-
+\label{ch:softmax}
 Tot nu toe hebben we altijd gekeken naar een \textit{cross entropy loss}. Er bestaat echter ook een andere optie: softmax. Hierbij gaan we de uitgang van onze classificatie normaliseren zodat de som van de probabiliteiten voor de verschillende klassen gelijk is aan 1. Het voordeel hiervan is dat we direct kunnen zien wat de kans is dat ons resultaat tot een bepaalde klasse behoort.\\
 \newline
 Dit doen we door, nadat we $\vec{z}^{[L]}$ berekend hebben, eerst $\vec{t}$ te berekenen, waarbij $t_{i}$ gelijk is aan:
@@ -188,6 +190,28 @@ Vervolgens kunnen we onze activatie $\vec{a}^{[L]}$ berekenen waarbij $a_{i}^{[L
 \end{equation}
 \noindent
 De \textit{loss} - en kostfunctie zal hetzelfde blijven, alleen zal $\hat{y}$ nu op een andere manier berekend worden. 
+
+\paragraph{Softmax in Python}
+
+We kunnen de softmax functie als volgt in Python implementeren (al is er ook een ingebouwd softmax-functie in Tensorflow):
+
+\begin{lstlisting}
+	def my_softmax(z): # Identiek aan tf.nn.softmax(z)
+	    """ Softmax converts a vector of values to a probability distribution.
+	    Args:
+	        z (ndarray (N,))  : input data, N features
+	    Returns:
+	        a (ndarray (N,))  : softmax of z
+	    """
+	    N = len(z)
+	    a = np.zeros(N)
+	    ez_sum = 0
+	    for k in range(N):                
+	        ez_sum += np.exp(z[k])       
+	    for j in range(N):                
+	        a[j] = np.exp(z[j])/ez_sum   
+	    return a
+\end{lstlisting}
 
 \subsection{Activatiefuncties}
 
@@ -229,7 +253,7 @@ De grafiek van de RELU functie ziet er uit zoals op Figuur \ref{fig:relu}.
 	\caption{RELU functie}
 	\label{fig:relu}
 \end{figure}
-
+\newpage
 \paragraph{Leaky RELU}
 
 De Leaky RELU functie is een variant van de RELU functie. In plaats van het maximum te nemen van 0 en $z$, wordt er hier het maximum genomen van het product van $z$ met een constante en $z$. Dit levert volgende vergelijking en de grafiek van Figuur \ref{fig:leaky-relu} op:
@@ -245,6 +269,39 @@ De Leaky RELU functie is een variant van de RELU functie. In plaats van het maxi
 \end{figure}
 \noindent
 Aangezien deze activatiefunctie niet heel interessant is, zullen we deze verder ook niet bespreken.
+
+\paragraph{Softmax}
+
+Softmax is zonet uitgebreid besproken in sectie \ref{ch:softmax}. Dit zullen we hier dus niet opnieuw doen.
+
+\paragraph{Activatiefuncties in Python}
+We voegen de activatiefunctie toe aan onze laag wanneer we ons model implementeren. Hieronder zijn de verschillende activatiefuncties die we gezien hebben terug te vinden zoals we ze in Python gebruiken:
+
+\begin{lstlisting}
+	# Geen activatie
+	Dense(25, activation='linear')
+	# Sigmoid activatie
+	Dense(25, activation='sigmoid')
+	# RELU activatie
+	Dense(25, activation='relu')
+	# Softmax activatie
+	Dense(25, activation='softmax')
+\end{lstlisting}
+\noindent
+Het zal echter numeriek stabieler zijn wanneer we softmax niet in de output laag van ons model steken, maar groeperen met onze kostfunctie. Om dit te doen, zullen we lineaire activatie gebruiken in de laatste \textit{Dense} laag van onze model en wanneer we ons model compileren, `\textit{from\_logits=True}' toevoegen aan onze \textit{loss}:
+\begin{lstlisting}
+	model = Sequential(
+	    [
+	        tf.keras.Input(shape=(400,)),     
+	        Dense(25, activation='relu', name = "layer1"),
+	        Dense(15, activation='relu',  name = "layer2"),   
+	        Dense(10, activation='linear', name = "layer3"),  
+	    ], name = "my_model"
+	)
+	model.compile(loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True))
+\end{lstlisting}
+\noindent
+Dit zal er wel voor zorgen dat onze output geen kansen zijn. Als we dit wel willen, zullen we de softmax functie nog moeten toepassen.
 
 \subsubsection{Activatiefuncties bij regressieprobleem}
 
