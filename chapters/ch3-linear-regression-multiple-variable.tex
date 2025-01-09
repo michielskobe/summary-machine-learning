@@ -3,7 +3,7 @@
 \subsection{Lineair model met meerdere variabelen}
 We kunnen de lineaire regressie die we tot nu toe behandeld hebben uitbreiden om meerdere \textit{features} te betrekken in ons model. We gebruiken in dit geval $x^{(i)}$ om de \textit{features} van het $i^{de}$ trainingsvoorbeeld voor te stellen en $x^{(i)}_{j}$ om de waarde van \textit{feature} $j$ in het $i^{de}$ trainingsvoorbeeld voor te stellen. Formule \ref{eq:f-wb} wordt dan uitgebreid tot:
 \begin{equation}
-	f_{w,b}(\vec{x}^{(i)}) = \vec{w} \cdot \vec{x} + b = \vec{w}^{T} \vec{x} + b = w_{1}x_{1} + w_{2}x_{2} + ... + w_{n}x_{n} + b
+	f_{\vec{w},b}(\vec{x}^{(i)}) = \vec{w} \cdot \vec{x} + b = \vec{w}^{T} \vec{x} + b = w_{1}x_{1} + w_{2}x_{2} + ... + w_{n}x_{n} + b
 	\label{eq:f-wb-multi}
 \end{equation}
 \noindent
@@ -38,7 +38,7 @@ We kunnen deze formule gemakkelijk uitrekenen met behulp van NumPy in Python. We
 
 De formule voor de kostfunctie (formule \ref{eq:cost-function}) kunnen we ook uitbreiden om met meerdere \textit{features} om te gaan. We bekomen dan:
 \begin{equation}
-	J(\vec{w}, b) = \frac{1}{2m}\sum_{i=1}^{m}(f_{\vec{w},b}(x^{(i)}) - y^{(i)})^{2}
+	J(\vec{w}, b) = \frac{1}{2m}\sum_{i=1}^{m}(f_{\vec{w},b}(\vec{x}^{(i)}) - y^{(i)})^{2}
 	\label{eq:cost-function-multi}
 \end{equation}
 \noindent
@@ -51,11 +51,11 @@ Dit is in principe dezelfde formule als voordien, alleen hebben we nu $n+1$ para
 Vervolgens kunnen ook de formules voor \textit{gradient descent} aangepast worden. Dit leidt tot volgende formules:
 
 \begin{equation}
-	w_{j} = w_{j} - \alpha \frac{\partial}{\partial w_{j}} J(\vec{w}, b) = w_{j} - \alpha \frac{1}{m}\sum_{i=1}^{m}[(f_{\vec{w},b}(x^{(i)}) - y^{(i)})x^{(i)}_{j}]
+	w_{j} = w_{j} - \alpha \frac{\partial}{\partial w_{j}} J(\vec{w}, b) = w_{j} - \alpha \frac{1}{m}\sum_{i=1}^{m}[(f_{\vec{w},b}(\vec{x}^{(i)}) - y^{(i)})x^{(i)}_{j}]
 	\label{eq:gradient-descent-lin-reg-multi-w}
 \end{equation}
 \begin{equation}
-	b = b - \alpha \frac{\partial}{\partial b} J(\vec{w}, b) = b - \alpha \frac{1}{m}\sum_{i=1}^{m}[(f_{\vec{w},b}(x^{(i)}) - y^{(i)})]
+	b = b - \alpha \frac{\partial}{\partial b} J(\vec{w}, b) = b - \alpha \frac{1}{m}\sum_{i=1}^{m}[(f_{\vec{w},b}(\vec{x}^{(i)}) - y^{(i)})]
 	\label{eq:gradient-descent-lin-reg-multi-b}
 \end{equation}
 \noindent
@@ -76,7 +76,7 @@ Er kan op meerdere manieren genormaliseerd worden. Een eerste optie is om de \te
 
 \subsubsection{Learning rate}
 
-We willen natuurlijk ook een manier hebben om te bepalen of onze \textit{learning rate} $\alpha$ correct ingesteld is. Dit kan bijvoorbeeld met een automatische convergentie test waarbij we kijken of de kostfunctie monotoon daalt als we blijven itereren. We kunnen spreken van convergentie als $J(w,b)$ met minder dan $10^{-3}$ daalt in één iteratie. Wanneer $J(w,b)$ stijgt in plaats van daalt (divergeert) of afwisselend daalt en stijgt, is onze waarde voor $\alpha$ te groot. Wanneer $\alpha$ te klein is zullen we trage convergentie hebben. In dit geval kan het interessanter zijn om de hyperparameter iets groter te maken. 
+We willen natuurlijk ook een manier hebben om te bepalen of onze \textit{learning rate} $\alpha$ correct ingesteld is. Dit kan bijvoorbeeld met een automatische convergentie test waarbij we kijken of de kostfunctie monotoon daalt als we blijven itereren. We kunnen spreken van convergentie als $J(\vec{w},b)$ met minder dan $10^{-3}$ daalt in één iteratie. Wanneer $J(\vec{w},b)$ stijgt in plaats van daalt (divergeert) of afwisselend daalt en stijgt, is onze waarde voor $\alpha$ te groot. Wanneer $\alpha$ te klein is zullen we trage convergentie hebben. In dit geval kan het interessanter zijn om de hyperparameter iets groter te maken. 
 
 \subsection{Feature Engineering}
 
