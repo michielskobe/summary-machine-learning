@@ -12,12 +12,12 @@ Het doel van lineaire regressie is het fitten van een lineair verband tussen onz
 \noindent
 Het model wordt voorgesteld door de volgende vergelijking:
 \begin{equation}
-	f_{w,b}(x) = w.x + b
+	f_{w,b}(x) = w \cdot x + b
 	\label{eq:f-wb}
 \end{equation}
 Hier stelt $x$ de input variabele voor. Parameters $w$ en $b$ stellen het gewicht van de input variabele en de bias-term voor. Deze moeten zo gekozen worden opdat onze voorspelling $f_{w,b}$ de output variabele $y$ zo dicht mogelijk benadert voor onze trainingsdata $(x,y)$. Een ander symbool dat af en toe gebruikt wordt om de predictie voor te stellen is $\hat{y}$. De voorspelling voor één specifiek element uit onze trainingsdata wordt voorgesteld als:
 \begin{equation}
-	\hat{y}^{(i)}= f_{w,b}(x^{(i)}) = w.x^{(i)} + b
+	\hat{y}^{(i)}= f_{w,b}(x^{(i)}) = w \cdot x^{(i)} + b
 	\label{eq:f-wb-i}
 \end{equation}
 
@@ -127,13 +127,13 @@ Wanneer we het minimum van deze random initialisaties nemen, zijn we vrij zeker 
 
 Om \textit{gradient descent} toe te passen op lineaire regressie, combineren we formules \ref{eq:f-wb-i}, \ref{eq:cost-function}, \ref{eq:w-temp} en \ref{eq:b-temp}. We bekomen dan de volgende formules:
 \begin{equation}
-	\frac{\partial}{\partial w}J(w, b) = \frac{1}{m}\sum_{i=1}^{m}(f_{w,b}(x^{(i)}) - y^{(i)}) . x^{(i)}
+	\frac{\partial}{\partial w}J(w, b) = \frac{1}{m}\sum_{i=1}^{m}(f_{w,b}(x^{(i)}) - y^{(i)}) \cdot x^{(i)}
 \end{equation}
 \begin{equation}
 	\frac{\partial}{\partial b}J(w, b) = \frac{1}{m}\sum_{i=1}^{m}(f_{w,b}(x^{(i)}) - y^{(i)})
 \end{equation}
 \begin{equation}
-	w_{temp} = w - \alpha \frac{1}{m}\sum_{i=1}^{m}(f_{w,b}(x^{(i)}) - y^{(i)}) . x^{(i)}
+	w_{temp} = w - \alpha \frac{1}{m}\sum_{i=1}^{m}(f_{w,b}(x^{(i)}) - y^{(i)}) \cdot x^{(i)}
 \end{equation}
 \begin{equation}
 	b_{temp} = b - \alpha \frac{1}{m}\sum_{i=1}^{m}(f_{w,b}(x^{(i)}) - y^{(i)})
