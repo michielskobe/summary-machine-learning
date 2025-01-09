@@ -11,7 +11,7 @@ We kunnen ook niet-lineaire \textit{decision boundaries} hebben. Dit doen we doo
 \noindent
 Voor bovenstaand geval is dit dus: 
 \begin{equation*}
-	{2 + 2 \choose 2} = \frac{4!}{2! 2!} = \frac{4.3.2.1}{2.1.2.1} = 6
+	{2 + 2 \choose 2} = \frac{4!}{2! 2!} = \frac{\ldots4\cdot 3\cdot 2\cdot 1}{2\cdot 1\cdot 2\cdot 1} = 6
 \end{equation*}
 \newpage
 \noindent
@@ -172,7 +172,7 @@ We kunnen nu ook de kostfunctie gaan uitbreiden voor \textit{multi-class} classi
 \noindent
 Dit levert ons de volgende kostfunctie op:
 \begin{equation}
-	J(W^{[1]}, b^{[1]}, ..., W^{[L]}, b^{[L]}) = - \sum_{i=1}^{m} \sum_{k=1}^{K} y_{k}^{(i)} ln( \hat{y}_{k}^{(i)})
+	J(W^{[1]}, b^{[1]}, \ldots , W^{[L]}, b^{[L]}) = - \sum_{i=1}^{m} \sum_{k=1}^{K} y_{k}^{(i)} ln( \hat{y}_{k}^{(i)})
 \end{equation}
 
 \subsection{Softmax}
@@ -279,7 +279,7 @@ We voegen de activatiefunctie toe aan onze laag wanneer we ons model implementer
 
 \begin{lstlisting}
 	# Geen activatie
-	Dense(25, activation='linear')
+  Dense(25, activation='linear')
 	# Sigmoid activatie
 	Dense(25, activation='sigmoid')
 	# RELU activatie

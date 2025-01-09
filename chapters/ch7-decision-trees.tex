@@ -58,7 +58,7 @@ We kunnen de entropie als volgt berekenen in Python:
 	        if p1 != 0 and p1 != 1:
 	            entropy = - p1 * numpy.log2(p1) - (1-p1) * numpy.log2(1-p1)
 	        else:
-	            entropy = 0.
+	            entropy = 0
 	
 	    return entropy
 \end{lstlisting}
@@ -73,7 +73,7 @@ We kunnen nu op zoek gaan naar een manier om te kijken welke split de beste is. 
 \noindent
 Voor de waarden uit ons voorbeeld, zal dit het volgende resultaat opleveren:
 \begin{equation}
-	\frac{5}{10} H(0,8) + \frac{5}{10} H(0,2) = \frac{5}{10} . 0,72+ \frac{5}{10} . 0,72 = 0,72
+	\frac{5}{10} H(0,8) + \frac{5}{10} H(0,2) = \frac{5}{10} \cdot 0,72+ \frac{5}{10} \cdot 0,72 = 0,72
 \end{equation}
 \noindent
 Deze waarden willen we zo laag mogelijk hebben en zullen we vervolgens gebruiken om de \textit{information gain} te berekenen. Dit doen we als volgt:
