@@ -23,7 +23,7 @@ We kunnen vervolgens een predictie voor de score maken zoals we dit eerder bij r
 
 \subsubsection{Gebruikersprofielen leren}
 
-We kunnen nu, wanneer we de \textit{features} en de scores van de gebruikers kennen, de het profiel van gebruiker $j$ en dus de parameters $\vec{w}^{(j)}$ en $b^{(j)}$ gaan leren. Dit doen we door de volgende kostfunctie de minimaliseren voor gebruiker $j$:
+We kunnen nu, wanneer we de \textit{features} en de scores van de gebruikers kennen, het profiel van gebruiker $j$ en dus de parameters $\vec{w}^{(j)}$ en $b^{(j)}$ gaan leren. Dit doen we door de volgende kostfunctie de minimaliseren voor gebruiker $j$:
 \begin{equation}
 	J(\vec{w}^{(j)}, b^{(j)}) = \frac{1}{2} \sum_{i:r(i, j) = 1} (\vec{w}^{(j)} \cdot \vec{x}^{(i)} + b^{(j)} - y^{(i, j)})^{2} + \frac{\lambda}{2} \sum_{k=1}^{n}(w_{k}^{(j)})^{2}
 \end{equation}
