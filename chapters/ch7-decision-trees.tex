@@ -116,7 +116,7 @@ We kunnen een split maken, de bijhorende \textit{information gain} berekenen en 
 	    right_indices = []
 	
 	    for i in node_indices:
-	        if (X[i][feature] :
+	        if (X[i][feature] == 1):
 	            left_indices.append(i) 
 	        else: 
 	            right_indices.append(i)
