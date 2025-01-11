@@ -167,12 +167,12 @@ Tot nu toe hebben we enkel binaire classificatie besproken waarbij we 2 klassen 
 We kunnen nu ook de kostfunctie gaan uitbreiden voor \textit{multi-class} classificatie. Als $K$ het aantal klassen is, bekomen we voor de \textit{loss}-functie:
 
 \begin{equation}
-	L = - \sum_{k=1}^{K} y_{k} ln( \hat{y}_{k})
+	L = - \frac{1}{m} \sum_{k=1}^{K} y_{k} ln( \hat{y}_{k})
 \end{equation}
 \noindent
 Dit levert ons de volgende kostfunctie op:
 \begin{equation}
-	J(W^{[1]}, b^{[1]}, \ldots , W^{[L]}, b^{[L]}) = - \sum_{i=1}^{m} \sum_{k=1}^{K} y_{k}^{(i)} ln( \hat{y}_{k}^{(i)})
+	J(W^{[1]}, b^{[1]}, \ldots , W^{[L]}, b^{[L]}) = - \frac{1}{m} \sum_{i=1}^{m} \sum_{k=1}^{K} y_{k}^{(i)} ln( \hat{y}_{k}^{(i)})
 \end{equation}
 
 \subsection{Softmax}
