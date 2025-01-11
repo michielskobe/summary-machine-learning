@@ -337,8 +337,8 @@ We kunnen de formules om de kostfunctie te berekenen en om \textit{gradient desc
 	        # Calculate the regularization term for dj_dw[j]
 	        dj_dw_j_reg = (lambda_ / m) * w[j]
 	
-	    # Add the regularization term  to the correspoding element of dj_dw
-	    dj_dw[j] = dj_dw[j] + dj_dw_j_reg
+	        # Add the regularization term  to the correspoding element of dj_dw
+	        dj_dw[j] = dj_dw[j] + dj_dw_j_reg
 	
 	    return dj_db, dj_dw
 \end{lstlisting}
