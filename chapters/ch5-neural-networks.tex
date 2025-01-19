@@ -59,7 +59,7 @@ Hierbij wijst $j$ op de laag van de node en $i$ op de node binnen die laag $j$. 
 	z_{i}^{[j]} = \vec{w}_{i}^{[j]^{T}} \vec{x} + b_{i}^{[j]}
 \end{equation}
 \noindent
-Voor de tweede node van laag 1 (de \textit{hidden layer} van Figuur \ref{fig:neural-network-model-1}), is deze berekening gelijk aan:
+Voor node 2 van laag 1 (de \textit{hidden layer} van Figuur \ref{fig:neural-network-model-1}), is deze berekening gelijk aan:
 \begin{equation*}
 	z_{2}^{[1]} = \vec{w}_{2}^{[1]} \cdot \vec{x} + b_{2}^{[1]}
 \end{equation*}
@@ -68,7 +68,7 @@ Voor de tweede node van laag 1 (de \textit{hidden layer} van Figuur \ref{fig:neu
 \end{equation*}
 We kunnen ook een formule opstellen om direct de hele laag te berekenen:
 \begin{equation}
-	\vec{z}^{[j]} = W^{[j]} \cdot \vec{x} + \vec{b}^{[j]}
+	\vec{z}^{[j]} = W^{[j]} \vec{x} + \vec{b}^{[j]}
 \end{equation}
 \begin{equation}
 	\vec{a}^{[j]} = \sigma(\vec{z}^{[j]})
@@ -76,19 +76,20 @@ We kunnen ook een formule opstellen om direct de hele laag te berekenen:
 \noindent
 Voor het model van Figuur \ref{fig:neural-network-model-1} levert dit de volgende vergelijkingen op, met telkens de dimensie van de vector er bij vermeld ter verduidelijking:
 \begin{equation*}
-	\underset{4\times1}{\vec{z}^{[1]}} = \underset{4\times3}{W^{[1]}} \cdot \underset{3\times1}{\vec{x}} + \underset{4\times1}{\vec{b}^{[1]}}
+	\underset{4\times1}{\vec{z}^{[1]}} = \underset{4\times3}{W^{[1]}} \underset{3\times1}{\vec{x}} + \underset{4\times1}{\vec{b}^{[1]}}
 \end{equation*}
 \begin{equation*}
 	\underset{4\times1}{\vec{a}^{[1]}} = \underset{4\times1}{\sigma(\vec{z}^{[1]})}
 \end{equation*}
 \begin{equation*}
-	\underset{1\times1}{\vec{z}^{[2]}} = \underset{1\times4}{W^{[2]}} \cdot \underset{4\times1}{\vec{a}^{[1]}} + \underset{1\times1}{\vec{b}^{[2]}}
+	\underset{1\times1}{\vec{z}^{[2]}} = \underset{1\times4}{W^{[2]}} \underset{4\times1}{\vec{a}^{[1]}} + \underset{1\times1}{\vec{b}^{[2]}}
 \end{equation*}
 \begin{equation*}
 	\underset{1\times1}{\vec{a}^{[2]}} = \underset{1\times1}{\sigma(\vec{z}^{[2]}) }
 \end{equation*}
 \noindent
-Dit model kan uitgebreid worden tot meerdere lagen met een verschillend aantal knopen per laag, zoals op Figuir \ref{fig:neural-network-model-2}.
+We zien dus dat de logits en biasterm per laag een kolomvector worden, de gewichten zullen een matrix vormen.
+Dit model kan uitgebreid worden tot meerdere lagen met een verschillend aantal knopen per laag, zoals op Figuur \ref{fig:neural-network-model-2}.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.5\textwidth]{images/15-neural-network-model-2.png}
@@ -130,7 +131,7 @@ Aangezien neurale netwerken zoals we ze nu zien een combinatie is van ons logist
 We gaan niet te diep in op \textit{gradient descent}. Bij \textit{forward propagation} gaan we van ingang naar uitgang en zullen we dus de kostfunctie berekenen. Bij \textit{backpropagation} gaan we in de omgekeerde richting werken en berekenen we de partiële afgeleiden van de kostfunctie naar $W$ en $b$ en passen we hun waarden op basis hiervan aan. Dit zullen we opnieuw herhaaldelijk uitvoeren tot we convergentie bereiken. 
 
 \paragraph{\textit{Gradient descent} in Python}
-Nadat we ons model geïmplementeerd hebben, kunnen we een kostfunctie opstellen voor het model en \textit{gradient descent } toepassen. Dit doen we als volgt:
+Nadat we ons model geïmplementeerd hebben, kunnen we een kostfunctie meegeven voor het model zodat \textit{gradient descent } kan toegepast worden. Dit doen we als volgt:
 
 \begin{lstlisting}
 	model.compile(
@@ -164,7 +165,7 @@ Tot nu toe hebben we enkel binaire classificatie besproken waarbij we 2 klassen 
 
 \subsection{Kostfunctie voor \textit{multi-class} classificatie}
 
-We kunnen nu ook de kostfunctie gaan uitbreiden voor \textit{multi-class} classificatie. Als $K$ het aantal klassen is, bekomen we voor de \textit{loss}-functie:
+We kunnen nu ook de kostfunctie, de \textit{Cross-Entropy Loss}, gaan uitbreiden voor \textit{multi-class} classificatie. Als $K$ het aantal klassen is, bekomen we voor de \textit{loss}-functie:
 
 \begin{equation}
 	L = - \frac{1}{m} \sum_{k=1}^{K} y_{k} ln( \hat{y}_{k})
@@ -175,9 +176,28 @@ Dit levert ons de volgende kostfunctie op:
 	J(W^{[1]}, b^{[1]}, \ldots , W^{[L]}, b^{[L]}) = - \frac{1}{m} \sum_{i=1}^{m} \sum_{k=1}^{K} y_{k}^{(i)} ln( \hat{y}_{k}^{(i)})
 \end{equation}
 
-\subsection{Softmax}
+\subsection{Activatiefuncties}
+
+\subsubsection{Activatiefuncties}
+
+Tot nu toe hebben we altijd gewerkt met een vaste activatiefunctie, de sigmoid activation. We zouden echter ook kunnen werken met een activatiefunctie per laag. Dit zullen we dan voorstellen als $\vec{a}^{[j]} = \sigma^{[j]}(\vec{z}^{[j]})$ waarbij $j$ gaat van 1 tot $L$. \\
+\newline
+Typisch zullen we in onze verborgen laag gebruik maken van een RELU activatiefunctie en in onze output laag van de logistische functie (sigmoid) of softmax. We zullen de verschillende activatiefuncties nog eens kort even bespreken.
+
+\paragraph{Sigmoid}
+\label{ch:sigmoid}
+De sigmoid hebben we al eerder besproken in deel \ref{ch:logistic-regression} van deze samenvatting. Hij wordt beschreven door formule \ref{eq:sigmoid} (al zullen we nu het symbool $a$ gebruiken in plaats van $g$) en het verloop ziet er uit zoals op Figuur \ref{fig:sigmoid}. \\
+\newline
+De sigmoid wordt typisch gebruikt aan de output laag. We stellen vast dat als we deze functie afleiden naar $z$, dat we het volgende bekomen:
+\begin{equation}
+	\frac{da}{dz} = a (1 - a)
+\end{equation}
+\noindent
+We kunnen ook afleiden dat deze afgeleide ongeveer gelijk zal zijn aan 0 voor zeer grote en kleine waarden van $z$. 
+
+\paragraph{Softmax}
 \label{ch:softmax}
-Tot nu toe hebben we altijd gekeken naar een \textit{cross entropy loss}. Er bestaat echter ook een andere optie: softmax. Hierbij gaan we de uitgang van onze classificatie normaliseren zodat de som van de probabiliteiten voor de verschillende klassen gelijk is aan 1. Het voordeel hiervan is dat we direct kunnen zien wat de kans is dat ons resultaat tot een bepaalde klasse behoort.\\
+Daarnaast hebben we ook de softmax activatie(functie). Hierbij gaan we de uitgang van onze classificatie normaliseren zodat de som van de kansen voor de verschillende klassen gelijk is aan 1. Het voordeel hiervan is dat we direct kunnen zien wat de kans is dat ons resultaat tot een bepaalde klasse behoort.\\
 \newline
 Dit doen we door, nadat we $\vec{z}^{[L]}$ berekend hebben, eerst $\vec{t}$ te berekenen, waarbij $t_{i}$ gelijk is aan:
 \begin{equation}
@@ -189,7 +209,7 @@ Vervolgens kunnen we onze activatie $\vec{a}^{[L]}$ berekenen waarbij $a_{i}^{[L
 	a_{i}^{[L]} = \frac{t_{i}}{\sum_{i=1}^{K} t_{i}}
 \end{equation}
 \noindent
-De \textit{loss} - en kostfunctie zal hetzelfde blijven, alleen zal $\hat{y}$ nu op een andere manier berekend worden. 
+De \textit{loss} - en kostfunctie zal hetzelfde blijven, alleen zal $\hat{y}$ nu op een andere manier berekend worden. Het nadeel aan softmax tegenover de sigmoid activatie is dat we nu alle logits van een laag nodig hebben om de individuele activaties te berekenen aangezien we ze relatief tegenover elkaar bepalen. Tegenover softmax staat ook nog hardmax, waarbij enkel de "winnende" klasse volgens de kansen zal geactiveerd worden waarbij de andere klassen een waarde 0 toegewezen krijgen. In de meeste gevallen is het echter handig om niet alleen de winnende klasse te zien, maar ook de kansen van de anderen.
 
 \paragraph{Softmax in Python}
 
@@ -197,40 +217,21 @@ We kunnen de softmax functie als volgt in Python implementeren (al is er ook een
 
 \begin{lstlisting}
 	def my_softmax(z): # Identiek aan tf.nn.softmax(z)
-	    """ Softmax converts a vector of values to a probability distribution.
-	    Args:
-	        z (ndarray (N,))  : input data, N features
-	    Returns:
-	        a (ndarray (N,))  : softmax of z
-	    """
-	    N = len(z)
-	    a = np.zeros(N)
-	    ez_sum = 0
-	    for k in range(N):                
-	        ez_sum += np.exp(z[k])       
-	    for j in range(N):                
-	        a[j] = np.exp(z[j])/ez_sum   
-	    return a
+	""" Softmax converts a vector of values to a probability distribution.
+	Args:
+	z (ndarray (N,))  : input data, N features
+	Returns:
+	a (ndarray (N,))  : softmax of z
+	"""
+	N = len(z)
+	a = np.zeros(N)
+	ez_sum = 0
+	for k in range(N):                
+	ez_sum += np.exp(z[k])       
+	for j in range(N):                
+	a[j] = np.exp(z[j])/ez_sum   
+	return a
 \end{lstlisting}
-
-\subsection{Activatiefuncties}
-
-\subsubsection{Activatiefuncties}
-
-Tot nu toe hebben we altijd gewerkt met een vaste activatiefunctie. We zouden echter ook kunnen werken met een activatiefunctie per laag. Dit zullen we dan voorstellen als $\vec{a}^{[i]} = \sigma^{[i]}(\vec{z}^{[i]})$ waarbij $i$ gaat van 1 tot $L$. \\
-\newline
-Typisch zullen we in onze verborgen laag gebruik maken van een RELU activatiefunctie en in onze output laag van de logistische functie (sigmoid) of softmax. We zullen de verschillende activatiefuncties nog eens kort even bespreken.
-
-\paragraph{Sigmoid}
-
-De sigmoid hebben we al eerder besproken in deel \ref{ch:logistic-regression} van deze samenvatting. Hij wordt beschreven door formule \ref{eq:sigmoid} (al zullen we nu het symbool $a$ gebruiken in plaats van $g$) en het verloop ziet er uit zoals op Figuur \ref{fig:sigmoid}. \\
-\newline
-De sigmoid wordt typisch gebruikt aan de output laag. We stellen vast dat als we deze functie afleiden naar $z$, dat we het volgende bekomen:
-\begin{equation}
-	\frac{da}{dz} = a (1 - a)
-\end{equation}
-\noindent
-We kunnen ook afleiden dat deze afgeleide ongeveer gelijk zal zijn aan 0 voor zeer grote en kleine waarden van $z$. 
 
 \paragraph{RELU}
 
@@ -269,10 +270,6 @@ De Leaky RELU functie is een variant van de RELU functie. In plaats van het maxi
 \end{figure}
 \noindent
 Aangezien deze activatiefunctie niet heel interessant is, zullen we deze verder ook niet bespreken.
-
-\paragraph{Softmax}
-
-Softmax is zonet uitgebreid besproken in sectie \ref{ch:softmax}. Dit zullen we hier dus niet opnieuw doen.
 
 \paragraph{Activatiefuncties in Python}
 We voegen de activatiefunctie toe aan onze laag wanneer we ons model implementeren. Hieronder zijn de verschillende activatiefuncties die we gezien hebben terug te vinden zoals we ze in Python gebruiken:
@@ -315,7 +312,7 @@ We hebben de niet-lineariteit van onze activatiefunctie nodig om de complexiteit
 
 Stel dat we al onze gewichten en \textit{biases} initieel op 0 zetten, dan zullen de nodes dezelfde update krijgen. We krijgen hierdoor een bepaalde symmetrie waardoor we ons model kunnen vereenvoudigen. Dit is natuurlijk ongewenst. \\
 \newline
-Om dit tegen te gaan gaan we al onze gewichten random initialiseren zodat deze niet dezelfde waarden hebben. We mogen dit echter niet met te grote random waarden doen, want dan zullen onze logits ook groot worden, waardoor de afgeleide van onze activatie opnieuw laag wordt en we dus traag zullen leren. 
+Om dit tegen te gaan gaan we al onze gewichten random initialiseren zodat deze niet dezelfde waarden hebben. We mogen dit echter niet met te grote random waarden doen, want dan zullen onze logits ook groot worden, waardoor de afgeleide van onze activatie opnieuw laag wordt en we dus traag zullen leren. Zie hierbij terug naar de \ref{ch:sigmoid} activatie, waarbij de afgeleide die mee in \textit{gradient descent} zit klein zal zijn bij grote waarden van $z$.
 
 \subsubsection{Geavanceerde optimalisatie: ADAM}
 

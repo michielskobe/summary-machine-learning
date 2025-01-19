@@ -265,9 +265,9 @@ Voor lineaire regressie bekomen we dan de volgende kostfunctie wanneer we regula
 	\label{eq:cost-function-lin-regul}
 \end{equation}
 \noindent
-Deze kostfunctie bestaat nu uit twee termen die elk hun eigen doel hebben. De eerste term heeft als doel om de data te fitten. De tweede term zal \textit{overfitting} trachten te compenseren. Hier is $\lambda$ een hyperparameter die ook wel de regularisatieparameter genoemd wordt. Wanneer deze te hoog wordt ingesteld, lopen we het risico op \textit{underfitting} aangezien de gewichten dan allemaal heel klein zullen zijn en vooral de constante \textit{bias} een invloed zal hebben. \\
+Deze kostfunctie bestaat nu uit twee termen die elk hun eigen doel hebben. De eerste term heeft als doel om de data te fitten. De tweede term zal \textit{overfitting} trachten te compenseren. Hier is $\lambda$ een hyperparameter die ook wel de regularisatieparameter genoemd wordt. Wanneer deze te hoog wordt ingesteld, lopen we het risico op \textit{underfitting} aangezien de betreffende gewichten dan heel klein zullen zijn en vooral de constante \textit{bias} een invloed zal hebben. Hierdoor faalt het model dan weer opnieuw om de complexe patronen te leren. \\
 \newline
-In onze formules voor het \textit{gradient descent} algoritme, zal dit leiden tot een extra term $-\frac{\alpha \lambda}{m} w_{j}$ in formule \ref{eq:gradient-descent-lin-reg-multi-w}. Formule \ref{eq:gradient-descent-lin-reg-multi-b} zal ongewijzigd blijven aangezien deze term wegvalt wanneer we J($\vec{w}$, b) afleiden naar $b$. We kunnen hier dus ook weer terugzien dat de regularisatie ervoor zorgt dat de invloed van het gewicht afneemt. In de literatuur spreken we van \textit{weight decay}. 
+In onze formules voor het \textit{gradient descent} algoritme, zal dit leiden tot een extra factor $(1-\frac{\alpha \lambda}{m} w_{j})$ in formule \ref{eq:gradient-descent-lin-reg-multi-w}. Hierdoor zal voor gewicht van input feature j afnemen elke iteratie van gradient descent doordat we de waarde ervan vermenigvuldigen met die factor. In de literatuur spreken we dus van \textit{weight decay}. Formule \ref{eq:gradient-descent-lin-reg-multi-b} zal ongewijzigd blijven aangezien deze term wegvalt wanneer we J($\vec{w}$, b) afleiden naar $b$.
 
 \paragraph{Regularisatie bij logistische regressie}
 
