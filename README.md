@@ -1,6 +1,6 @@
 # Machine Learning Summary - KU Leuven (2024-2025)
 
-This repository contains the `.tex` files for the Dutch LaTeX summary of the Machine Learning course by Professor Bart Vanrumste, part of the Master in Industrial Sciences: Electronics-ICT at KU Leuven during the 2024-2025 academic year. The summary is based on the lecture slides and accompanying personal notes from the lectures.
+This repository contains the `.tex` files for the Dutch LaTeX summary of the Machine Learning course by Professor Bart Vanrumste, part of the Master of Electronics and ICT Engineering Technology at KU Leuven during the 2024-2025 academic year. The summary is based on the lecture slides and accompanying personal notes from the lectures.
 
 ## Disclaimer
 
